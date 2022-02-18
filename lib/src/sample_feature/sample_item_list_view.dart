@@ -28,7 +28,15 @@ class SampleItemListView extends StatefulWidget {
 }
 
 class _SampleItemListViewState extends State<SampleItemListView> {
-  double koef = 0;
+  late double koef;
+  final minKoef = 0.1;
+  final maxKoef = 0.7;
+
+  @override
+  void initState() {
+    koef = minKoef;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +71,7 @@ class _SampleItemListViewState extends State<SampleItemListView> {
             top: topPosition,
             child: GestureDetector(
               onTap: () => setState(() {
-                koef = koef == 0.5 ? 0 : .5;
+                koef = koef == maxKoef ? minKoef : maxKoef;
               }),
               child: AnimatedRotation(
                   duration: const Duration(milliseconds: 700),
