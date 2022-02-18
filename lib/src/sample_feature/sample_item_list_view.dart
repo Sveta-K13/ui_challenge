@@ -1,8 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../settings/settings_view.dart';
 import 'sample_item.dart';
-import 'sample_item_details_view.dart';
 
 const cardHeight = 140.0;
 const cardWidth = 300.0;
@@ -65,8 +66,8 @@ class _SampleItemListViewState extends State<SampleItemListView> {
                 koef = koef == 0.5 ? 0 : .5;
               }),
               child: AnimatedRotation(
-                  duration: const Duration(seconds: 1),
-                  turns: koef * 0.1 * item.id,
+                  duration: const Duration(milliseconds: 700),
+                  turns: koef * 0.01 * item.id * (item.id.isEven ? 1 : -1),
                   child: CustomCard(item: item)),
             ),
           );
@@ -96,10 +97,46 @@ class CustomCard extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(20),
           backgroundBlendMode: BlendMode.hardLight,
+          boxShadow: const [BoxShadow(blurRadius: 15, spreadRadius: -10)],
         ),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Text(item.text),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ShaderMask(
+              blendMode: BlendMode.srcIn,
+              shaderCallback: (bounds) => const LinearGradient(
+                  colors: [Colors.indigo, Colors.black],
+                  stops: [0.3, 0.7]).createShader(bounds),
+              child: const Icon(
+                Icons.card_giftcard,
+                color: Colors.white,
+              ),
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Text(
+                Random(item.id).nextInt(100000000).toString(),
+                style: const TextStyle(shadows: [
+                  Shadow(blurRadius: 6),
+                  Shadow(color: Colors.white38, blurRadius: 3),
+                ]),
+              ),
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(colors: [
+                  Colors.black,
+                  Colors.indigo,
+                ], stops: [
+                  0.3,
+                  0.7
+                ]).createShader(bounds),
+                child: Text(
+                  item.text,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ]),
+          ],
         ));
   }
 }
